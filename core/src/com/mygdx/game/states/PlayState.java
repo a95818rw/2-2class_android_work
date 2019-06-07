@@ -3,13 +3,22 @@ package com.mygdx.game.states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.sprites.Bird;
+import com.mygdx.game.sprites.Tube;
+
+import java.lang.reflect.Type;
 
 public class PlayState extends State {
+    private static final int TUBE_SPACING = 125;
+    private static final int TUBE_COUNT = 4;
+
 
     private Bird bird;
     private Texture bg;
+
+    private Array<Tube> tubes;
 
     protected PlayState(GameStateManager gsm) {
 
@@ -17,6 +26,12 @@ public class PlayState extends State {
         bird = new Bird(50, 300);
         cam.setToOrtho(false, MyGdxGame.WIDTH / 2, MyGdxGame.HEIGHT / 2);//cam up?
         bg = new Texture("bg.png");
+
+        tubes = new Array<Tube>();
+
+        for(int i = 1; i <= TUBE_COUNT; i++){
+            tubes.add(new Tube(i * (TUBE_SPACING + Tube.TUBE_WIDTH)));
+        }
 
     }
 
@@ -34,6 +49,15 @@ public class PlayState extends State {
 
         handleInput();
         bird.updata(dt);
+        cam.position.x = bird.getPosition().x + 80;
+
+        for(Tube tube : tubes){
+            if(cam.position.x - (cam.viewportWidth / 2) > tube.getPosTopTube().x + tube.getTopTube().getWidth()){
+                tube.reposition(tube.getPosTopTube().x + ((Tube.TUBE_WIDTH + TUBE_SPACING) * TUBE_COUNT));
+            }
+        }
+
+        cam.update();
 
     }
 
@@ -43,7 +67,12 @@ public class PlayState extends State {
         sb.begin();
         sb.draw(bg, cam.position.x - (cam.viewportWidth / 2), 0);
         sb.draw(bird.getTexture(), bird.getPosition().x, bird.getPosition().y);
+        for(Tube tube : tubes){
+            sb.draw(tube.getTopTube(), tube.getPosTopTube().x, tube.getPosTopTube().y);
+            sb.draw(tube.getBottomTube(), tube.getPosBotTube().x, tube.getPosBotTube().y);
+        }
         sb.end();
+
     }
 
     @Override
