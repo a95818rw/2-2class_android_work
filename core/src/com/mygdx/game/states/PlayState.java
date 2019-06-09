@@ -6,10 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.sprites.Bird;
-import com.mygdx.game.sprites.Tube;
-
-import java.lang.reflect.Type;
+import com.mygdx.game.sprites.Ghost;
+import com.mygdx.game.sprites.Knife;
 
 public class PlayState extends State {
     private static final int TUBE_SPACING = 125;
@@ -17,17 +15,17 @@ public class PlayState extends State {
     private static final int GROUND_Y_OFFSET = -50;
 
 
-    private Bird bird;
+    private Ghost bird;
     private Texture bg;
     private Texture ground;
     private Vector2 groundPos1, groundPos2;
 
-    private Array<Tube> tubes;
+    private Array<Knife> knives;
 
     protected PlayState(GameStateManager gsm) {
 
         super(gsm);
-        bird = new Bird(50, 300);
+        bird = new Ghost(50, 300);
         cam.setToOrtho(false, MyGdxGame.WIDTH / 2, MyGdxGame.HEIGHT / 2);//cam up?
         bg = new Texture("bg.png");
         ground = new Texture("ground.png");
@@ -35,10 +33,10 @@ public class PlayState extends State {
         groundPos2 = new Vector2((cam.position.x - cam.viewportWidth / 2) + ground.getWidth(), GROUND_Y_OFFSET);
 
 
-        tubes = new Array<Tube>();
+        knives = new Array<Knife>();
 
         for(int i = 1; i <= TUBE_COUNT; i++){
-            tubes.add(new Tube(i * (TUBE_SPACING + Tube.TUBE_WIDTH)));
+            knives.add(new Knife(i * (TUBE_SPACING + Knife.TUBE_WIDTH)));
         }
 
     }
@@ -60,14 +58,13 @@ public class PlayState extends State {
         bird.updata(dt);
         cam.position.x = bird.getPosition().x + 80;
 
-        for(Tube tube : tubes){
-            if(cam.position.x - (cam.viewportWidth / 2) > tube.getPosTopTube().x + tube.getTopTube().getWidth()){
-                tube.reposition(tube.getPosTopTube().x + ((Tube.TUBE_WIDTH + TUBE_SPACING) * TUBE_COUNT));
+        for(Knife knife : knives){
+            if(cam.position.x - (cam.viewportWidth / 2) > knife.getPosKnife1().x + knife.getKnife1().getWidth()){
+                knife.reposition(knife.getPosKnife1().x + ((Knife.TUBE_WIDTH + TUBE_SPACING) * TUBE_COUNT));
             }
-            if(tube.collides(bird.getBounds())){
+            if(knife.collides(bird.getBounds())){
                 gsm.set(new PlayState(gsm));
             }
-
 
         }
 
@@ -84,9 +81,15 @@ public class PlayState extends State {
         sb.begin();
         sb.draw(bg, cam.position.x - (cam.viewportWidth / 2), 0);
         sb.draw(bird.getTexture(), bird.getPosition().x, bird.getPosition().y);
-        for(Tube tube : tubes){
-            sb.draw(tube.getTopTube(), tube.getPosTopTube().x, tube.getPosTopTube().y);
-            sb.draw(tube.getBottomTube(), tube.getPosBotTube().x, tube.getPosBotTube().y);
+        for(Knife knife : knives){
+            sb.draw(knife.getKnife1(), knife.getPosKnife1().x, knife.getPosKnife1().y);
+            sb.draw(knife.getKnife2(), knife.getPosKnife2().x, knife.getPosKnife2().y);
+            sb.draw(knife.getKnife3(), knife.getPosKnife3().x, knife.getPosKnife3().y);
+            sb.draw(knife.getKnife4(), knife.getPosKnife4().x, knife.getPosKnife4().y);
+            sb.draw(knife.getKnife5(), knife.getPosKnife5().x, knife.getPosKnife5().y);
+            sb.draw(knife.getKnife6(), knife.getPosKnife6().x, knife.getPosKnife6().y);
+            sb.draw(knife.getKnife7(), knife.getPosKnife7().x, knife.getPosKnife7().y);
+            sb.draw(knife.getKnife8(), knife.getPosKnife8().x, knife.getPosKnife8().y);
         }
 
         sb.draw(ground, groundPos1.x, groundPos1.y);
@@ -100,8 +103,8 @@ public class PlayState extends State {
         bg.dispose();
         bird.dispose();
         ground.dispose();
-        for(Tube tube : tubes){
-            tube.dispose();
+        for(Knife knife : knives){
+            knife.dispose();
         }
         System.out.println("Play State Disposed");
     }

@@ -7,31 +7,29 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
-public class Bird {
+public class Ghost {
 
     private static final int GRAVITY = -15;
     private static final int MOVEMENT = 100;
     private Vector3 position;
     private Vector3 velocity;
     private Rectangle bounds;
-    private Animation birdAnimation;
+    private Texture ghost;
     private Texture texture ;
     private Sound flap;
 
-    public Bird(int x, int y){
+    public Ghost(int x, int y){
 
         position = new Vector3(x, y, 0);
         velocity = new Vector3(0, 0, 0);
         texture = new Texture("birdanimation.png");
-        birdAnimation = new Animation(new TextureRegion(texture), 3, 0.5f);
+        ghost = new Texture("ghost.png");
         bounds = new Rectangle(x, y, texture.getWidth() / 3, texture.getHeight());
         flap = Gdx.audio.newSound(Gdx.files.internal("sfx_wing.ogg"));
 
     }
 
     public void updata(float dt){
-
-        birdAnimation.updata(dt);
 
         if(position.y > 0)
             velocity.add(0, GRAVITY, 0);
@@ -50,8 +48,8 @@ public class Bird {
         return position;
     }
 
-    public TextureRegion getTexture() {
-        return birdAnimation.getFrame();
+    public Texture getTexture() {
+        return ghost;
     }
 
     public void Jump(){
@@ -65,7 +63,7 @@ public class Bird {
     }
 
     public void dispose(){
-        texture.dispose();
+        ghost.dispose();
         flap.dispose();
     }
 

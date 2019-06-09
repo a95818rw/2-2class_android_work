@@ -23,9 +23,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		gsm = new GameStateManager();
-		music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
+		music = Gdx.audio.newMusic(Gdx.files.internal("HideAndSeek.mp3"));
 		music.setLooping(true);
-		music.setVolume(0.1f);
+		music.setVolume(0.5f);
 		music.play();
 		Gdx.gl.glClearColor(0, 2, 0, 1);
 		gsm.push(new MenuState(gsm));
